@@ -1,0 +1,11 @@
+langchain
+langchain-community
+langchain-weaviate
+langchain-core
+langchain-huggingface
+langchain_mistralai
+langgraph
+langchain-openai
+duckduckgo-search
+weaviate-client
+python-dotenv
