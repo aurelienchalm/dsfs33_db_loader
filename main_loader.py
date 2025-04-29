@@ -4,6 +4,7 @@ from weaviate_client import connect_to_weaviate
 from weaviate_collections import setup_collections, suppr_collections
 from weaviate_inserter import insert_into_weaviate
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain.embeddings import HuggingFaceEmbeddings
 import logging
 import warnings
 
@@ -27,6 +28,8 @@ try:
     print("Connexion à Weaviate...")
     client = connect_to_weaviate()
     print("Weaviate prêt :", client.is_ready())
+
+
 
     # Nettoyage + création des collections
     print("(Re)création des collections...")
@@ -60,10 +63,16 @@ try:
         print(f"Chunk {i+1} → file_name: {chunk.metadata.get('file_name')} | originalFile: {chunk.metadata.get('originalFile')}")
         #print(f"Nombre de documents d'origine:{len(all_docs)}\nNombre de documents splittés: {len(splitted_docs)}")
 
+    
+    # Initialisation de l'embedder
+    print("Chargement du modèle d'embedding Hugging Face...")
+    embed_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+
     # Insertion dans Weaviate
     print("Insertion dans Weaviate...")
-    insert_into_weaviate(client, splitted_docs)
+    insert_into_weaviate(client, splitted_docs, embed_model)
     
+
 except Exception as e:
     print("Une erreur est survenue :", e)
 
